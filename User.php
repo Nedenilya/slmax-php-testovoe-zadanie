@@ -1,5 +1,7 @@
 <?php 
 
+require_once 'DB.php';
+
 class User{
 
 
@@ -10,8 +12,12 @@ class User{
 	public $sex;
 	public $cityOfBirth;
 
+	private $db = new DB();
+
 	public function __construct($id = null, $name, $surname, $birthday, $sex, $cityOfBirth)
 	{
+		if($id != null)
+			$db->getUser($id);
 		$this->name = $name;
 		$this->surname = $surname;
 		$this->birthday = $birthday;
@@ -35,8 +41,8 @@ class User{
 
 	}
 
-	public static function SexToString($birthday){
-
+	public static function SexToString($sex){
+		return ($sex == 1) ? "Муж" : "Жен";
 	}
 
 }
