@@ -17,7 +17,19 @@ class DB
 	}
 
 	function getUser($id){
+		$query = "SELECT * FROM users where id = " . $id;
+	    $query = mysqli_query($this->connection, $query);
 
+	    if($data = mysqli_fetch_array($query)){
+	    	//echo $data['name'];
+	        return new User(['name' => $data['name'], 
+	        				  'surname' => $data['surname'], 
+	        				  'birthday' => $data['birthday'], 
+	        				  'sex' => $data['sex'], 
+	        				  'cityOfBirth' => $data['city_of_birth']], $id);
+	    }else{
+	    	die("This user does not exist");
+	    }
 	}
 
 	function addUser(User $user){
@@ -29,28 +41,27 @@ class DB
 
 		if(mysqli_query($this->connection, $sql)){
 			$user_id = mysqli_insert_id($this->connection);
-			$this->connection->close();
-
+			// $this->connection->close();
 			return $user_id;
 		}else{
-			$this->connection->close();
+			// $this->connection->close();
 			return false;
 		}
 	}
 
-	function updateUser(User $user){
-		$sql = 'UPDATE users SET 	name = \'' . $user->name . '\',
-								  	surname = \'' . $user->surname . '\',
-								  	birthday = \'' . $user->birthday . '\',
-								  	sex = \'' . $user->sex . '\',
-								  	cityOfBirth = \'' . $user->cityOfBirth . '\'
-								  	WHERE id = ' . $user->id;
-
+	function updateUser($data){
+		//echo $data['id'];
+		$sql = 'UPDATE users SET 	name = \'' . $data['name'] . '\',
+								  	surname = \'' . $data['surname'] . '\',
+								  	birthday = \'' . $data['birthday'] . '\',
+								  	sex = \'' . $data['sex'] . '\',
+								  	city_of_birth = \'' . $data['cityOfBirth'] . '\'
+								  	WHERE id = ' . $data['id'];
 		if(mysqli_query($this->connection, $sql)){
-			$this->connection->close();
-			return $user;
+			// $this->connection->close();
+			return $this->getUser($data['id']);
 		}else{
-			$this->connection->close();
+			// $this->connection->close();
 			return false;
 		}
 	}
@@ -59,10 +70,10 @@ class DB
 		$sql = 'DELETE users WHERE id = ' . $id;
 
 		if(mysqli_query($this->connection, $sql)){
-			$this->connection->close();
+			// $this->connection->close();
 			return true;
 		}else{
-			$this->connection->close();
+			// $this->connection->close();
 			return false;
 		}
 	}
