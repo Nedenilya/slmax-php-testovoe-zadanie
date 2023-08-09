@@ -8,7 +8,7 @@ class User{
 	public $name;
 	public $surname;
 	public $birthday;
-	public $sex;
+	public $gender;
 	public $cityOfBirth;
 
 	private $db;
@@ -18,16 +18,29 @@ class User{
 
 		$this->db = new DB();
 		if($id != null && $data == null)
-			return $this->db->getUser($id);
+			$data = $this->db->getUser($id);
 
-		echo "idddd; ".$id;
-		echo $data['name'];
+		if(!$this->ValidateString($data['name'])){
+			die("Name must contain only letters");
+		}
+		
+		if(!$this->ValidateString($data['surname']))
+			die("Surname must contain only letters");
+
+		if(!$this->ValidateString($data['cityOfBirth']))
+			die("City must contain only letters");
+
+		if(!$this->ValidateDate($data['birthday']))
+			die("The date is not in the correct format, please enter the date in the following format: year-month-day");
+
+		if(!in_array($data['gender'], array('1', '0')))
+			die("The date is not in the correct format, please enter the date in the following format: year-month-day");
 
 		$this->id = $id;
 		$this->name = $data['name'];
 		$this->surname = $data['surname'];
 		$this->birthday = $data['birthday'];
-		$this->sex = $data['sex'];
+		$this->gender = $data['gender'];
 		$this->cityOfBirth = $data['cityOfBirth'];
 	}
 
@@ -35,17 +48,21 @@ class User{
 		$this->id = $this->db->addUser($this);
 	}
 
-	public function Delete(){
+	public function Delete($id = null){
+		if($id != null){
+			$this->db->deleteUser($id);
+			return;
+		}
 		$this->db->deleteUser($this->id);
 	}
 
-	public function Update($name, $surname, $birthday, $sex, $cityOfBirth){
+	public function Update($name, $surname, $birthday, $gender, $cityOfBirth){
 		return $this->db->updateUser([
 			'id' => $this->id,
 			'name' => $name, 
 			'surname' => $surname, 
 			'birthday' => $birthday, 
-			'sex' => $sex, 
+			'gender' => $gender, 
 			'cityOfBirth' => $cityOfBirth
 		]);
 	}
@@ -55,19 +72,28 @@ class User{
 		return substr($diff, 0, -4);
 	}
 
-	public static function SexToString($sex){
-		return ($sex == '1') ? "Муж" : "Жен";
+	public static function GenderToString($gender){
+		return ($gender == '1') ? "Мужской" : "Женский";
+	}
+
+	private function ValidateString($string){
+		return preg_match("/^([a-z]|[а-я])*$/iu", $string);
+	}
+
+	private function ValidateDate($date)
+	{
+	    $d = DateTime::createFromFormat('Y-m-d', $date);
+	    return $d && $d->format('Y-m-d') == $date;
 	}
 
 	public function print(){
-		echo "Id: " . $this->id . "\n";
+		echo "<pre>Id: " . $this->id . "\n";
 		echo "Name: " . $this->name . "\n";
 		echo "Surame: " . $this->surname . "\n";
 		echo "Age: " . User::BirthdayToAge($this->birthday) . "\n";
-		echo "Sex: " . User::SexToString($this->sex) . "\n";
-		echo "City Of Birth: " . $this->cityOfBirth . "\n";
+		echo "gender: " . User::GenderToString($this->gender) . "\n";
+		echo "City Of Birth: " . $this->cityOfBirth . "\n</pre>";
 	}
-
 }
 
 

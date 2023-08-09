@@ -21,12 +21,11 @@ class DB
 	    $query = mysqli_query($this->connection, $query);
 
 	    if($data = mysqli_fetch_array($query)){
-	    	//echo $data['name'];
-	        return new User(['name' => $data['name'], 
-	        				  'surname' => $data['surname'], 
-	        				  'birthday' => $data['birthday'], 
-	        				  'sex' => $data['sex'], 
-	        				  'cityOfBirth' => $data['city_of_birth']], $id);
+	        return ['name' => $data['name'], 
+				    'surname' => $data['surname'], 
+				    'birthday' => $data['birthday'], 
+				    'gender' => $data['gender'], 
+				    'cityOfBirth' => $data['city_of_birth']];
 	    }else{
 	    	die("This user does not exist");
 	    }
@@ -36,15 +35,13 @@ class DB
 		$sql = 'INSERT INTO users SET 	name = \'' . $user->name . '\',
 									  	surname = \'' . $user->surname . '\',
 									  	birthday = \'' . $user->birthday . '\',
-									  	sex = \'' . $user->sex . '\',
+									  	gender = \'' . $user->gender . '\',
 									  	city_of_birth = \'' . $user->cityOfBirth . '\'';
 
 		if(mysqli_query($this->connection, $sql)){
 			$user_id = mysqli_insert_id($this->connection);
-			// $this->connection->close();
 			return $user_id;
 		}else{
-			// $this->connection->close();
 			return false;
 		}
 	}
@@ -54,36 +51,39 @@ class DB
 		$sql = 'UPDATE users SET 	name = \'' . $data['name'] . '\',
 								  	surname = \'' . $data['surname'] . '\',
 								  	birthday = \'' . $data['birthday'] . '\',
-								  	sex = \'' . $data['sex'] . '\',
+								  	gender = \'' . $data['gender'] . '\',
 								  	city_of_birth = \'' . $data['cityOfBirth'] . '\'
 								  	WHERE id = ' . $data['id'];
 		if(mysqli_query($this->connection, $sql)){
-			// $this->connection->close();
-			return $this->getUser($data['id']);
+			return new User(id: $data['id']);
 		}else{
-			// $this->connection->close();
 			return false;
 		}
 	}
 
 	function deleteUser($id){
-		$sql = 'DELETE users WHERE id = ' . $id;
+		$sql = 'DELETE FROM users WHERE id = ' . $id;
 
 		if(mysqli_query($this->connection, $sql)){
-			// $this->connection->close();
 			return true;
 		}else{
-			// $this->connection->close();
 			return false;
 		}
 	}
 
-	function isMail($mail){
-		return filter_var($mail, FILTER_VALIDATE_EMAIL);
-	}
+	function getUsersIds($condition = '', $value = ''){
+		if($condition == '' && $value == '')
+			$query = "SELECT id FROM users";
+		else
+			$query = "SELECT id FROM users WHERE " . $condition . " '" . $value . "'";
 
-	function isPhone($phone){
-		return preg_match('/^(\+[1-9][0-9]*[0-9]*)?[0]?[1-9][0-9]*$/', $phone);
+	    $query = mysqli_query($this->connection, $query);
+
+	    $user_ids = [];
+	    while ($row = mysqli_fetch_assoc($query)){
+	        $user_ids[] = $row;
+	    }
+	    return $user_ids;
 	}
 
 }
