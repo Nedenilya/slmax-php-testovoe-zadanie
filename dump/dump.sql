@@ -24,13 +24,18 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `surname` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  `birthday` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  `sex` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `birthday` date NOT NULL,
+  `gender` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `city_of_birth` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Дамп данных таблицы slmax.users: ~0 rows (приблизительно)
+-- Дамп данных таблицы slmax.users: ~4 rows (приблизительно)
+INSERT INTO `users` (`id`, `name`, `surname`, `birthday`, `gender`, `city_of_birth`) VALUES
+	(40, 'Test1', 'test1', '1995-05-27', '0', 'Stolbci'),
+	(47, 'Test2', 'test2', '2002-05-27', '1', 'Minsk'),
+	(49, 'Test3', 'test3', '2010-05-27', '1', 'Minsk'),
+	(50, 'Test4', 'test4', '1999-05-27', '0', 'Minskcity');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
