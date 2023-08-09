@@ -6,14 +6,14 @@ require_once "UserHandler.php";
 
 /* пример работы с классом User.php */
 $user = new User(['name' => "Илья", 
-				  'surname' => "Neden", 
+				  'surname' => "Недень", 
 				  'birthday' => "2002-05-27", 
 				  'gender' => '1', 
-				  'cityOfBirth' => "Minskity"]);	//Создание нового пользователя 
+				  'cityOfBirth' => "Столбцы"]);	//Создание нового пользователя 
 
 $user->Save();	//сохранение пользователя в БД
 $user->print(); //вывод полей пользователя
-$user = $user->Update("RiptIlya", "test", "2001-05-27", '0', "Minskit"); //обновление полей пользователя
+$user = $user->Update("Ilya", "Neden", "2001-05-27", '1', "Minsk"); //обновление полей пользователя
 
 $user->Delete(48);//удаление пользователя
 
