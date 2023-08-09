@@ -10,7 +10,7 @@ class DB
 	}
 
 	function connect(){
-		$this->connection = new mysqli("localhost", "root", "", "slmax");
+		$this->connection = new mysqli("", "", "", "slmax");
 		if($this->connection->connect_error)
 		    die("Error: Something went wrong, please try again later"); //For users
 			//die("Error: " . $this->connection->connect_error);        //For debug
